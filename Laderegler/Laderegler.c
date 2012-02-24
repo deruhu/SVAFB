@@ -4,7 +4,7 @@
  * Created: 06.08.2011 13:25:51
  *  Author: Weidenhocker
  *
- *	Status: funktioniert nicht im Moment...  musss dringend noch überarbeitet werden 
+ *	Status: funktioniert nicht im Moment...  musss dringend noch ï¿½berarbeitet werden 
  *			Hardware: funktioniert nicht im Moment
  */ 
 
@@ -21,7 +21,7 @@
 #include <avr/interrupt.h> 
 #include <inttypes.h>
  
-uint32_t Sol_PWR(void);
+uint32_t sol_pwr(void);
 void PPT(void);
 void PPT_p(uint32_t neu);
 void PPT_m(uint32_t neu);
@@ -29,7 +29,7 @@ void TE_Schutz(void);
 uint8_t Display (uint8_t, uint8_t);
 
 #define PWM_PWR	OCR2
-#define Bat_niedrig	250
+#define BAT_LOW	250
 
 volatile char tCounter=0,GIAF=0;	//GIAF= "generelles Interrupt aktivierungsFlag"
 char tCounterb=0;
@@ -38,7 +38,7 @@ int main(void)
 {
 	
 	int tempval;
-	uint8_t Disp_Mode=0,Disp_Stat=1;
+	uint8_t disp_mode=0,disp_stat=1;
 
 //	Start Initialisierung
 
@@ -76,7 +76,7 @@ int main(void)
     */
   
   //
-  //  Jetzt nochmal für den Timer2 (OC2: Pin16)
+  //  Jetzt nochmal fï¿½r den Timer2 (OC2: Pin16)
   //
   // Modus 3 (Fast-PWM, 8 bit):
   //
@@ -94,12 +94,12 @@ int main(void)
   TCCR2 = (1<<WGM21) | (1<<WGM20) | (1<<CS20) | (1<<COM21);
   
   // der Compare Wert OCRnx
-  // Wenn der Zähler diesen Wert erreicht, wird mit
+  // Wenn der Zï¿½hler diesen Wert erreicht, wird mit
   // obiger Konfiguration der OC1A Ausgang abgeschaltet
-  // Sobald der Zähler wieder bei 0 startet, wird der
+  // Sobald der Zï¿½hler wieder bei 0 startet, wird der
   // Ausgang wieder auf 1 gesetzt
   //
-  // Durch Verändern dieses Wertes, werden die unterschiedlichen
+  // Durch Verï¿½ndern dieses Wertes, werden die unterschiedlichen
   // PWM Werte eingestellt.
 
 	
@@ -126,7 +126,7 @@ int main(void)
 	
 		
 	//uint16_t i=0;
-	uint8_t Te=0,Tz=0,LStat=0;
+	uint8_t Te=0,Tz=0,led_stat=0;
 	PORTB&= ~(1<<PB0);
 	
 	
@@ -142,17 +142,17 @@ int main(void)
 			PORTB|= (1<<PB0);
 		}
 		
-				if (LStat!=0)	//Lampen aus
+				if (led_stat!=0)	//Lampen aus
 		{
 			PORTB=PORTB & ~(1<<PB4) & ~(1<<PB5);
-			LStat=0;
+			led_stat=0;
 		}
 		
 		PPT();
 		
 		if ((tCounter==45)&&(GIAF&(1<<0)))	
 		{
-			Disp_Stat=Display(Disp_Mode,Disp_Stat);
+			disp_stat=Display(disp_mode,disp_stat);
 			GIAF&=~(1<<0);
 		}		
 	}
@@ -164,7 +164,7 @@ int main(void)
 			PORTB&= ~(1<<PB0);
 		}
 		
-		if ((PINC&(1<<PC4))!=0) //Lüfter aus
+		if ((PINC&(1<<PC4))!=0) //Lï¿½fter aus
 		{
 			PORTC&= ~(1<<PC4);
 		}
@@ -176,38 +176,38 @@ int main(void)
 		{	Tz=0;
 		}
 		
-		if ((Te==0)&&(PIND6!=0))	//Schalter gedrückt, schöner wäre über interrupt, aber PD2 und PD3 hat das Display
+		if ((Te==0)&&(PIND6!=0))	//Schalter gedrï¿½ckt, schï¿½ner wï¿½re ï¿½ber interrupt, aber PD2 und PD3 hat das Display
 		{
 			Te=1;
-			if ((LStat&(1<<0))==0)
+			if ((led_stat&(1<<0))==0)
 			{
-				LStat|=(1<<0);
+				led_stat|=(1<<0);
 				PORTB|=(1<<PB4);
 			}
-			else if ((LStat&(1<<0))!=0)
+			else if ((led_stat&(1<<0))!=0)
 			{
-				LStat&=~(1<<0);
+				led_stat&=~(1<<0);
 				PORTB&=~(1<<PB4);
 			} 
 		}
 		
-		if ((Tz==0)&&(PIND7!=0))	//Schalter gedrückt, schöner wäre über interrupt, aber PD2 und PD3 hat das Display
+		if ((Tz==0)&&(PIND7!=0))	//Schalter gedrï¿½ckt, schï¿½ner wï¿½re ï¿½ber interrupt, aber PD2 und PD3 hat das Display
 		{
 			Tz=1;
-			if ((LStat&(1<<1))==0)
+			if ((led_stat&(1<<1))==0)
 			{
-				LStat|=(1<<1);
+				led_stat|=(1<<1);
 				PORTB|=(1<<PB5);
 			}
-			else if ((LStat&(1<<1))!=0)
+			else if ((led_stat&(1<<1))!=0)
 			{
-				LStat&=~(1<<1);
+				led_stat&=~(1<<1);
 				PORTB&=~(1<<PB5);
 			} 
 		}
 		
 		if ((tCounter==45)&&(GIAF&(1<<0)))	
-		{	Disp_Stat=Display(Disp_Mode,Disp_Stat);
+		{	disp_stat=Display(disp_mode,disp_stat);
 			GIAF&=~(1<<0);
 		}
 	}
@@ -215,19 +215,19 @@ int main(void)
 
 	}
 }
-uint8_t Display(uint8_t Mode, uint8_t Status){
+uint8_t Display(uint8_t modus, uint8_t status){
 	
 uint16_t zeig;	
 char Buffer[20];
 
 if (PINB & (1<<PB2)) //Displaybeleuchtung an
 			{
-				if (!Status){
+				if (!status){
 				lcd_command(LCD_SET_DISPLAY | LCD_DISPLAY_ON);
-				Status=1;
+				status=1;
 				}
 			
-	switch (Mode){
+	switch (modus){
 		case 0:		lcd_setcursor(0,1);
 					lcd_string( "U_Sol" );
 				
@@ -257,13 +257,13 @@ if (PINB & (1<<PB2)) //Displaybeleuchtung an
 									
 else //Displaybeleuchtung aus
 			{
-				if (Status){
+				if (status){
 				lcd_command(LCD_SET_DISPLAY | LCD_DISPLAY_OFF);
-				Status=0;
+				status=0;
 			}
 			
 			}
-	return Status;
+	return status;
 	}
 
 /*
@@ -283,33 +283,33 @@ ISR(TIMER0_OVF_vect)
 	}
 
 /*
-	Bestimmung der Eingangsleistung in Form des 32-bit-Äquivalents.
+	Bestimmung der Eingangsleistung in Form des 32-bit-ï¿½quivalents.
 	Die Eingangsvariablen (werden aus Analogwerten gelesen) haben ein 10 bit-Format.
-	Diese werden einfach multipliziert, da keine zeit für Fließkommaberechnungen 
+	Diese werden einfach multipliziert, da keine zeit fï¿½r Flieï¿½kommaberechnungen 
 	verschwendet werden soll. 
 */
-uint32_t Sol_PWR(void){
+uint32_t sol_pwr(void){
 	uint16_t sol_u,sol_i;
-	uint32_t PWR;
+	uint32_t pwr;
 	
 	sol_u=ADC_Read(0);
 	sol_i=ADC_Read(1);
-	PWR=sol_u*sol_i;
-	return PWR;	
+	pwr=sol_u*sol_i;
+	return pwr;	
 	}
 
 /*
 	Funktion zur Ermittlung des Spitzenleistungswertes.
-	Wenn mehr Leistung umgesetzt werden kann, indem die PWM größer gewählt wird, dann
+	Wenn mehr Leistung umgesetzt werden kann, indem die PWM grï¿½ï¿½er gewï¿½hlt wird, dann
 	wird der Punkt weiter oben, ansonsten weiter unten gesucht wenn der Spitzenwert bereits eingestellt ist,
 	dann wird nichts getan. 
 */	
 void PPT(void){
-	uint32_t PWR_alt,PWR_p,PWR_m;
+	uint32_t pwr_alt,pwr_p,pwr_m;
 	
-	PWR_alt=Sol_PWR();	
+	pwr_alt=sol_pwr();	
 	
-	/* Leistung bei nem größeren PWM-Schritt berechnen */ 
+	/* Leistung bei nem grï¿½ï¿½eren PWM-Schritt berechnen */ 
 	if(PWM_PWR<=253) PWM_PWR++;	
 	/*else {
 		PWM_PWR=254;
@@ -318,7 +318,7 @@ void PPT(void){
 		}
 	*/
 	_delay_ms(10);
-	PWR_p=Sol_PWR();
+	pwr_p=sol_pwr();
 	
 	/* Leistung bei nem kleineren PWM-Schritt berechnen */
 	if(PWM_PWR>=3) PWM_PWR-=2;
@@ -329,15 +329,15 @@ void PPT(void){
 		}
 	*/
 	_delay_ms(10);
-	PWR_m=Sol_PWR();
+	pwr_m=sol_pwr();
 	
-	if ((PWR_p>PWR_alt)&&(PWR_p>=PWR_m))
+	if ((pwr_p>pwr_alt)&&(pwr_p>=pwr_m))
 	{
-		PPT_p(PWR_p);
+		PPT_p(pwr_p);
 	}
-	else if ((PWR_m>PWR_alt)&&(PWR_m>PWR_p))
+	else if ((pwr_m>pwr_alt)&&(pwr_m>pwr_p))
 	{
-		PPT_m(PWR_m);
+		PPT_m(pwr_m);
 	}
 	else {
 		PWM_PWR++;
@@ -356,7 +356,7 @@ void PPT_p(uint32_t neu){
 		else {
 		PWM_PWR=254;
 		}
-		neu=Sol_PWR();
+		neu=sol_pwr();
 	} while (neu>=alt);
 	
 		PWM_PWR--;
@@ -375,7 +375,7 @@ void PPT_m(uint32_t neu){
 		else {
 		PWM_PWR=1;
 		}
-		neu=Sol_PWR();
+		neu=sol_pwr();
 	} while (neu>=alt);
 	
 		PWM_PWR++;
@@ -383,13 +383,13 @@ void PPT_m(uint32_t neu){
 	}	
 
 void TE_Schutz(void){
-	uint16_t Bat;
+	uint16_t u_bat;
 	
-	Bat=ADC_Read(2);
-	if (Bat <= Bat_niedrig) {
+	u_bat=ADC_Read(2);
+	if (u_bat <= BAT_LOW) {
 		PORTC &= ~(1<<PC5); //PC5=Tiefentladeshutz ausschalten
 	}
-	else if (Bat>=(Bat_niedrig+3)) {
+	else if (u_bat>=(BAT_LOW+3)) {
 		PORTD |= (1<<PC5); //PC5=Tiefentladeshutz einschalten
 	}
 }
