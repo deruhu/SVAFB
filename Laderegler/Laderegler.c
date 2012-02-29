@@ -304,7 +304,7 @@ ISR(TIMER0_OVF_vect)
 uint32_t sol_pwr(void){
 	uint32_t pwr;
 	
-	pwr=U_SOL*I_SOL;
+	pwr=(uint32_t)U_SOL*(uint32_t)I_SOL;
 	return pwr;	
 	}
 
