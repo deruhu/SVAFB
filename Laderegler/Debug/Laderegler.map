@@ -128,7 +128,7 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000      0xb5c
+.text           0x0000000000000000      0xd1c
  *(.vectors)
  .vectors       0x0000000000000000       0x26 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
                 0x0000000000000000                __vectors
@@ -202,60 +202,60 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
                 0x000000000000005c                __vector_10
                 0x000000000000005c                __vector_16
                 0x000000000000005c                __vector_18
- .text          0x000000000000005e      0x678 ./Laderegler.o
-                0x0000000000000182                Display
-                0x00000000000002b0                __vector_9
-                0x00000000000002e0                sol_pwr
-                0x000000000000030a                PPT
-                0x000000000000049a                main
-                0x00000000000005d0                PPT_p
-                0x0000000000000646                PPT_m
-                0x00000000000006bc                TE_Schutz
-                0x00000000000006d4                UL_Schutz
- .text          0x00000000000006d6       0x8e ./adc-routines.o
-                0x00000000000006d6                ADC_Init
-                0x00000000000006ec                ADC_enable
-                0x00000000000006f0                ADC_disable
-                0x00000000000006f4                ADC_Read
-                0x000000000000070c                ADC_Read_Avg
- .text          0x0000000000000764      0x2f4 ./lcd-routines.o
-                0x0000000000000764                lcd_init
-                0x00000000000008b4                lcd_data
-                0x00000000000008f2                lcd_command
-                0x0000000000000930                lcd_clear
-                0x000000000000096c                lcd_home
-                0x00000000000009a8                lcd_setcursor
-                0x0000000000000a0a                lcd_string
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodhi4.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_divmodsi4.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_copy_data.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_clear_bss.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodsi4.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
- .text          0x0000000000000a58        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
-                0x0000000000000a58                . = ALIGN (0x2)
+ .text          0x000000000000005e      0x838 ./Laderegler.o
+                0x0000000000000182                main
+                0x0000000000000464                Display
+                0x0000000000000592                __vector_9
+                0x00000000000005c4                sol_pwr
+                0x00000000000005f2                PPT
+                0x0000000000000776                PPT_p
+                0x00000000000007f0                PPT_m
+                0x000000000000086a                TE_Schutz
+                0x0000000000000882                UL_Schutz
+ .text          0x0000000000000896       0x8e ./adc-routines.o
+                0x0000000000000896                ADC_Init
+                0x00000000000008ac                ADC_enable
+                0x00000000000008b0                ADC_disable
+                0x00000000000008b4                ADC_Read
+                0x00000000000008cc                ADC_Read_Avg
+ .text          0x0000000000000924      0x2f4 ./lcd-routines.o
+                0x0000000000000924                lcd_init
+                0x0000000000000a74                lcd_data
+                0x0000000000000ab2                lcd_command
+                0x0000000000000af0                lcd_clear
+                0x0000000000000b2c                lcd_home
+                0x0000000000000b68                lcd_setcursor
+                0x0000000000000bca                lcd_string
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodhi4.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_divmodsi4.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_copy_data.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_clear_bss.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodsi4.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
+ .text          0x0000000000000c18        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
+                0x0000000000000c18                . = ALIGN (0x2)
  *(.text.*)
- .text.libgcc   0x0000000000000a58       0x28 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodhi4.o)
-                0x0000000000000a58                __udivmodhi4
- .text.libgcc   0x0000000000000a80       0x36 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_divmodsi4.o)
-                0x0000000000000a80                __divmodsi4
- .text.libgcc   0x0000000000000ab6        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
- .text.libgcc   0x0000000000000ab6        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000000ab6        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_clear_bss.o)
- .text.libgcc   0x0000000000000ab6       0x44 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodsi4.o)
-                0x0000000000000ab6                __udivmodsi4
+ .text.libgcc   0x0000000000000c18       0x28 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodhi4.o)
+                0x0000000000000c18                __udivmodhi4
+ .text.libgcc   0x0000000000000c40       0x36 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_divmodsi4.o)
+                0x0000000000000c40                __divmodsi4
+ .text.libgcc   0x0000000000000c76        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000000c76        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000000c76        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000000c76       0x44 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodsi4.o)
+                0x0000000000000c76                __udivmodsi4
  .text.avr-libc
-                0x0000000000000afa       0x3e /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
-                0x0000000000000afa                itoa
+                0x0000000000000cba       0x3e /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
+                0x0000000000000cba                itoa
  .text.avr-libc
-                0x0000000000000b38       0x20 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
-                0x0000000000000b38                strrev
-                0x0000000000000b58                . = ALIGN (0x2)
+                0x0000000000000cf8       0x20 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
+                0x0000000000000cf8                strrev
+                0x0000000000000d18                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000000b58        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
-                0x0000000000000b58                exit
-                0x0000000000000b58                _exit
+ .fini9         0x0000000000000d18        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
+                0x0000000000000d18                exit
+                0x0000000000000d18                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -274,11 +274,11 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000000b58        0x4 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
+ .fini0         0x0000000000000d18        0x4 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000000b5c                _etext = .
+                0x0000000000000d1c                _etext = .
 
-.data           0x0000000000800060       0x12 load address 0x0000000000000b5c
+.data           0x0000000000800060       0x12 load address 0x0000000000000d1c
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
@@ -307,9 +307,8 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
  *(.bss)
  .bss           0x0000000000800072        0x0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
  .bss           0x0000000000800072        0x3 ./Laderegler.o
-                0x0000000000800072                tCounter
-                0x0000000000800073                GIAF
-                0x0000000000800074                tCounterb
+                0x0000000000800072                GIAF
+                0x0000000000800073                tCounter
  .bss           0x0000000000800075        0x0 ./adc-routines.o
  .bss           0x0000000000800075        0x0 ./lcd-routines.o
  .bss           0x0000000000800075        0x0 /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a(_udivmodhi4.o)
@@ -323,8 +322,8 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
  *(.bss*)
  *(COMMON)
                 0x0000000000800075                PROVIDE (__bss_end, .)
-                0x0000000000000b5c                __data_load_start = LOADADDR (.data)
-                0x0000000000000b6e                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x0000000000000d1c                __data_load_start = LOADADDR (.data)
+                0x0000000000000d2e                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x0000000000800075        0x0
                 0x0000000000800075                PROVIDE (__noinit_start, .)
@@ -349,23 +348,23 @@ LOAD /usr/lib/gcc/avr/4.5.3/avr4/libgcc.a
 .signature
  *(.signature*)
 
-.stab           0x0000000000000000     0x29a0
+.stab           0x0000000000000000     0x2afc
  *(.stab)
  .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
- .stab          0x00000000000006cc      0xf78 ./Laderegler.o
-                                        0xf84 (size before relaxing)
- .stab          0x0000000000001644      0x36c ./adc-routines.o
+ .stab          0x00000000000006cc     0x10d4 ./Laderegler.o
+                                       0x10e0 (size before relaxing)
+ .stab          0x00000000000017a0      0x36c ./adc-routines.o
                                         0x534 (size before relaxing)
- .stab          0x00000000000019b0      0xd68 ./lcd-routines.o
+ .stab          0x0000000000001b0c      0xd68 ./lcd-routines.o
                                         0xf30 (size before relaxing)
- .stab          0x0000000000002718      0x1b0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
+ .stab          0x0000000000002874      0x1b0 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(itoa.o)
                                         0x1bc (size before relaxing)
- .stab          0x00000000000028c8       0xd8 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
+ .stab          0x0000000000002a24       0xd8 /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/libc.a(strrev.o)
                                          0xe4 (size before relaxing)
 
-.stabstr        0x0000000000000000      0xcef
+.stabstr        0x0000000000000000      0xcdd
  *(.stabstr)
- .stabstr       0x0000000000000000      0xcef /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
+ .stabstr       0x0000000000000000      0xcdd /usr/lib/gcc/avr/4.5.3/../../../avr/lib/avr4/crtm8.o
 
 .stab.excl
  *(.stab.excl)
