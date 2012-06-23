@@ -33,14 +33,17 @@ void TE_Schutz(void);
 uint8_t Display (uint8_t, uint8_t);
 
 
-#define PWM_PWR		OCR2
-#define BAT_LOW		250
-#define BAT_HIGH	0xFFFF
-#define U_SOL		ADC_Read(0)
-#define	U_BAT		ADC_Read(2)
-#define I_SOL		ADC_Read(1)
-#define TAG			U_SOL>U_BAT
-#define NACHT		U_BAT>U_SOL
+#define PWM_PWR		    OCR2
+#define BAT_LOW		    250
+#define BAT_HIGH	    0xFFFF
+#define U_SOL		    ADC_Read(0)
+#define	 U_BAT		    ADC_Read(2)
+#define I_SOL		    ADC_Read(1)
+#define TAG			    U_SOL>U_BAT
+#define NACHT		    U_BAT>U_SOL
+
+#define INT_TIMER      (1<<0)
+#define INT_SCHALTER   (1<<1)
 
 volatile uint8_t GIAF=0;	//GIAF= "generelles Interrupt aktivierungsFlag"
 volatile uint16_t tCounter=0;
@@ -293,13 +296,15 @@ d.h. ca. alle (21.85) ms
  */
 ISR(TIMER0_OVF_vect)
 {
-    uint16_t tCounterb=0;
-    if (tCounterb==460) //~10 sec
+    uint8_t tCounterb=0;
+    if (tCounterb==46) //~1 sec
     {tCounterb=0;
     }
     tCounterb++;
+#ifdef Ladeschaltung
     tCounter=tCounterb;
-    GIAF|=(1<<0)|(1<<1);
+#endif
+    GIAF|=INT_TIMER;
 }
 
 #ifdef Ladeschaltung
