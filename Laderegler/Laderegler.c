@@ -41,9 +41,15 @@ uint8_t Display (uint8_t, uint8_t);
 #define I_SOL		    ADC_Read(1)
 #define TAG			    U_SOL>U_BAT
 #define NACHT		    U_BAT>U_SOL
+#define TEMP_HIGH      150
+#define TEMP_THR       30
 
-#define INT_TIMER      (1<<0)
-#define INT_SCHALTER   (1<<1)
+#define INT_DISPLAY    (1<<0)
+#define INT_TIMER      (1<<1)
+#define INT_SCHALTER   (1<<2)
+
+#define LAMPE1  (1<<PB4)
+#define LAMPE2  (1<<PB5)
 
 volatile uint8_t GIAF=0;	//GIAF= "generelles Interrupt aktivierungsFlag"
 volatile uint16_t tCounter=0;
@@ -147,8 +153,8 @@ int main(void)
 
     while(1)
     {
-#ifdef Ladeschaltung
-        if(!(tCounter % 115)){
+
+        if(GIAF & INT_TIMER){
 
             TE_Schutz();
 
@@ -157,73 +163,100 @@ int main(void)
             {
                 if (led_stat!=0)	//Lampen aus
                 {
-                    PORTB=PORTB & ~(1<<PB4) & ~(1<<PB5);
-                    led_stat=0;
+                    led_stat=led_stat & ~LAMPE1 & ~LAMPE2;
+                    PORTB=PORTB & (led_stat | ~0x03);//~LAMPE1 & ~LAMPE2;
                 }
 
+#ifdef Ladeschaltung
                 if (!UL_Schutz()) //Shutdown ausmachen
                 {
+#endif
                     if(PINB&(1<<PB0)==0)
                         PORTB|= (1<<PB0);
 
-                    PPT();
 
-                    if ((tCounter==45)&&(GIAF&(1<<0)))
+                    if (GIAF & INT_DISPLAY)
                     {
                         disp_stat=Display(disp_mode,disp_stat);
                         GIAF&=~(1<<0);
                     }
+#ifdef Ladeschaltung
+                    PPT();
                 }
+
                 else PORTB &= ~(1<<PB0);
+#endif
             }
 
             else if (NACHT) //Nacht
             {
+#ifdef Ladeschaltung
                 if ((PINB&~(1<<PB0))!=0)
                 {
                     PORTB&= ~(1<<PB0);
                 }
-
+#endif
                 if ((PINC&(1<<PC4))!=0) //L�fter aus
                 {
                     PORTC&= ~(1<<PC4);
                 }
-                if ((Te==1)&&(PIND6==0))
-                {	Te=0;
+
+                switch (Te) {
+                case 1:
+                    if (PIND6==0)
+                        Te=0;
+                    break;
+
+                case 0:
+                    if (PIND6!=0)    //Schalter gedrückt, schöner wäre über interrupt, aber PD2 und PD3 hat das Display
+                    {
+                        Te=1;
+                        if ((led_stat&(1<<0))==0)
+                        {
+                            led_stat|=(1<<0);
+                            PORTB|=(1<<PB4);
+                        }
+                        else if ((led_stat&(1<<0))!=0)
+                        {
+                            led_stat&=~(1<<0);
+                            PORTB&=~(1<<PB4);
+                        }
+                    }
+                    break;
+                default:
+                    break;
                 }
 
-                if ((Tz==1)&&(PIND7==0))
-                {	Tz=0;
-                }
+                switch (Tz) {
+                case 1:                 //gedrückt
+                    if (PIND7==0)       //losgelassen
+                    {                   //Aktion bei losgelassen
+                        Te=0;
+                    }
+                    else if (PIND7==1)  //gehalten
+                    {                   //Aktion bei gehalten
+                        Te=1;
+                    }
+                    break;
 
-                if ((Te==0)&&(PIND6!=0))	//Schalter gedr�ckt, sch�ner w�re �ber interrupt, aber PD2 und PD3 hat das Display
-                {
-                    Te=1;
-                    if ((led_stat&(1<<0))==0)
-                    {
-                        led_stat|=(1<<0);
-                        PORTB|=(1<<PB4);
+                case 0:
+                    if (PIND7!=0)    //Schalter gedrückt, schöner wäre über interrupt, aber PD2 und PD3 hat das Display
+                    {                //Aktion sofort nach dem Drücken
+                        Te=1;
+                        if ((led_stat&(1<<1))==0)
+                        {
+                            led_stat|=(1<<1);
+                            PORTB|=(1<<PB5);
+                        }
+                        else if ((led_stat&(1<<1))!=0)
+                        {
+                            led_stat&=~(1<<1);
+                            PORTB&=~(1<<PB5);
+                        }
                     }
-                    else if ((led_stat&(1<<0))!=0)
-                    {
-                        led_stat&=~(1<<0);
-                        PORTB&=~(1<<PB4);
-                    }
-                }
-
-                if ((Tz==0)&&(PIND7!=0))	//Schalter gedr�ckt, sch�ner w�re �ber interrupt, aber PD2 und PD3 hat das Display
-                {
-                    Tz=1;
-                    if ((led_stat&(1<<1))==0)
-                    {
-                        led_stat|=(1<<1);
-                        PORTB|=(1<<PB5);
-                    }
-                    else if ((led_stat&(1<<1))!=0)
-                    {
-                        led_stat&=~(1<<1);
-                        PORTB&=~(1<<PB5);
-                    }
+                    break;
+                default:
+                    break;
                 }
 
                 if ((tCounter==45)&&(GIAF&(1<<0)))
@@ -233,7 +266,7 @@ int main(void)
             }
 
         }
-#endif
+
 
     }
 }
@@ -250,30 +283,38 @@ uint8_t Display(uint8_t modus, uint8_t status){
         }
 
         switch (modus){
-        case 0:		lcd_setcursor(0,1);
-        lcd_string( "U_Sol" );
+        case 0:
+            lcd_setcursor(0,1);
+            lcd_string( "U_Sol" );
 
-        lcd_setcursor(9,1);
-        lcd_string( "U_Bat" );
+            lcd_setcursor(9,1);
+            lcd_string( "U_Bat" );
 
-        zeig=U_SOL*25;
+            zeig=U_SOL*25;
 
-        lcd_setcursor(0,2);
-        itoa( (zeig/1000), Buffer, 10 );
-        lcd_string( Buffer );
-        lcd_data(0x2c);
-        itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
-        lcd_string( Buffer );
+            lcd_setcursor(0,2);
+            itoa( (zeig/1000), Buffer, 10 );
+            lcd_string( Buffer );
+            lcd_data(0x2c);
+            itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
+            lcd_string( Buffer );
 
-        zeig=U_BAT*25;
+            zeig=U_BAT*25;
 
-        lcd_setcursor(9,2);
-        itoa( (zeig/1000), Buffer, 10 );
-        lcd_string( Buffer );
-        lcd_data(0x2c);
-        itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
-        lcd_string( Buffer );
-        break;
+            lcd_setcursor(9,2);
+            itoa( (zeig/1000), Buffer, 10 );
+            lcd_string( Buffer );
+            lcd_data(0x2c);
+            itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
+            lcd_string( Buffer );
+            break;
+        case 1:
+            lcd_setcursor(0,1);
+            lcd_string ("Lampe");
+            lcd_setcursor(9,1);
+            lcd_string ("Zeit");
+
+            break;
         }
     }
 
@@ -418,10 +459,10 @@ void TE_Schutz(void){
 
     u_bat=U_BAT;
     if (u_bat <= BAT_LOW) {
-        PORTC &= ~(1<<PC5); //PC5=Tiefentladeshutz ausschalten
+        PORTC &= ~(1<<PC5); //PC5=Tiefentladeschutz ausschalten
     }
     else if (u_bat>=(BAT_LOW+3)) {
-        PORTD |= (1<<PC5); //PC5=Tiefentladeshutz einschalten
+        PORTD |= (1<<PC5); //PC5=Tiefentladeschutz einschalten
     }
 }
 
