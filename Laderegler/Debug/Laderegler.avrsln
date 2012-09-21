@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# AvrStudio Solution File, Format Version 11.00
+Project("{D1100916-62DA-4D80-A9B4-55A1E7CCEEB3}") = "Laderegler", "Laderegler\Laderegler.avrgccproj", "{03D00222-8941-4F4F-A341-961F42D57EB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{38D35063-BF4B-4E7E-B74C-6254827ACA49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03D00222-8941-4F4F-A341-961F42D57EB4}.Debug|AVR.ActiveCfg = Debug|AVR
+		{03D00222-8941-4F4F-A341-961F42D57EB4}.Debug|AVR.Build.0 = Debug|AVR
+		{03D00222-8941-4F4F-A341-961F42D57EB4}.Release|AVR.ActiveCfg = Release|AVR
+		{03D00222-8941-4F4F-A341-961F42D57EB4}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

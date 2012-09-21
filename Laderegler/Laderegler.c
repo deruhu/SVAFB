@@ -51,7 +51,7 @@ uint8_t Display (uint8_t, uint8_t);
 #define LAMPE1  (1<<PB4)
 #define LAMPE2  (1<<PB5)
 
-volatile uint8_t GIAF=0;	//GIAF= "generelles Interrupt aktivierungsFlag"
+volatile uint8_t GIAF=0, led_stat=0;	//GIAF= "generelles Interrupt aktivierungsFlag"
 volatile uint16_t tCounter=0;
 
 int main(void)
@@ -147,7 +147,7 @@ int main(void)
 
 
     //uint16_t i=0;
-    uint8_t Te=0,Tz=0,led_stat=0;
+    uint8_t Te=0,Tz=0;
     PORTB&= ~(1<<PB0);
 
 
@@ -273,6 +273,7 @@ int main(void)
 uint8_t Display(uint8_t modus, uint8_t status){
 
     uint16_t zeig;
+    uint8_t leds=0;
     char Buffer[20];
 
     if (PINB & (1<<PB2)) //Displaybeleuchtung an
@@ -308,11 +309,49 @@ uint8_t Display(uint8_t modus, uint8_t status){
             itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
             lcd_string( Buffer );
             break;
+
         case 1:
+
             lcd_setcursor(0,1);
+            lcd_string( "U_Bat" );
+
+            zeig=U_BAT*25;
+
+            lcd_setcursor(0,2);
+            itoa( (zeig/1000), Buffer, 10 );
+            lcd_string( Buffer );
+            lcd_data(0x2c);
+            itoa( (zeig-((zeig/1000)*1000)), Buffer, 10 );
+            lcd_string( Buffer );
+
+
+            lcd_setcursor(0,9);
             lcd_string ("Lampe");
             lcd_setcursor(9,1);
-            lcd_string ("Zeit");
+
+            leds=(led_stat & (LAMPE1 | LAMPE2));
+            switch(leds)
+            {
+            case 0:
+                lcd_string ("keine");
+                break;
+
+            case LAMPE1:
+                lcd_string ("L1");
+                break;
+
+            case LAMPE2:
+                lcd_string ("L2");
+                break;
+
+            case (LAMPE1|LAMPE2):
+                lcd_string ("L1 & L2");
+                break;
+
+            default:
+                break;
+            }
+
 
             break;
         }
