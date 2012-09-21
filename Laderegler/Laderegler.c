@@ -69,7 +69,7 @@ int main(void)
     _delay_ms(50);
 
     lcd_command(0b00001111);	//cursor setzen
-    lcd_string("Test");
+    lcd_string("Test2");
 
 #ifdef Ladeschaltung
 
@@ -161,6 +161,7 @@ int main(void)
 
             if (TAG) //Tag
             {
+                disp_mode=0;
                 if (led_stat!=0)	//Lampen aus
                 {
                     led_stat=led_stat & ~LAMPE1 & ~LAMPE2;
@@ -171,7 +172,7 @@ int main(void)
                 if (!UL_Schutz()) //Shutdown ausmachen
                 {
 #endif
-                    if(PINB&(1<<PB0)==0)
+                    if((PINB & (1<<PB0))==0)
                         PORTB|= (1<<PB0);
 
 
@@ -190,6 +191,8 @@ int main(void)
 
             else if (NACHT) //Nacht
             {
+
+                disp_mode=1;
 #ifdef Ladeschaltung
                 if ((PINB&~(1<<PB0))!=0)
                 {
@@ -259,9 +262,12 @@ int main(void)
                     break;
                 }
 
-                if ((tCounter==45)&&(GIAF&(1<<0)))
-                {	disp_stat=Display(disp_mode,disp_stat);
-                GIAF&=~(1<<0);
+                lcd_setcursor(0,1);
+
+                if (GIAF & INT_DISPLAY)//(tCounter==45)
+                {
+                    lcd_string( "n_tC" );
+                    disp_stat=Display(disp_mode,disp_stat);
                 }
             }
 
@@ -311,7 +317,6 @@ uint8_t Display(uint8_t modus, uint8_t status){
             break;
 
         case 1:
-
             lcd_setcursor(0,1);
             lcd_string( "U_Bat" );
 
@@ -325,9 +330,9 @@ uint8_t Display(uint8_t modus, uint8_t status){
             lcd_string( Buffer );
 
 
-            lcd_setcursor(0,9);
-            lcd_string ("Lampe");
             lcd_setcursor(9,1);
+            lcd_string ("Lampe");
+            lcd_setcursor(9,2);
 
             leds=(led_stat & (LAMPE1 | LAMPE2));
             switch(leds)
@@ -352,7 +357,6 @@ uint8_t Display(uint8_t modus, uint8_t status){
                 break;
             }
 
-
             break;
         }
     }
@@ -376,14 +380,15 @@ d.h. ca. alle (21.85) ms
  */
 ISR(TIMER0_OVF_vect)
 {
-    uint8_t tCounterb=0;
+    static uint8_t tCounterb=0;
     if (tCounterb==46) //~1 sec
-    {tCounterb=0;
+    {
+        tCounterb=0;
+        GIAF|=INT_DISPLAY;
     }
     tCounterb++;
-#ifdef Ladeschaltung
+
     tCounter=tCounterb;
-#endif
     GIAF|=INT_TIMER;
 }
 
